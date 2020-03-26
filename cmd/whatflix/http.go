@@ -66,7 +66,7 @@ func handleHTTP(w http.ResponseWriter, req *http.Request, name string, f func(re
 		err = errors.WithMessage(err, "handle http")
 		code, text := httperrors.GetCodeText(err)
 		http.Error(w, text, code)
-		log.Printf("Error : %s\n%+v", err, err)
+		log.Printf("Error : %v", err)
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
