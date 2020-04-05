@@ -1,4 +1,5 @@
-package main
+// Package httphealthcheck checks the health of HTTP sevver
+package httphealthcheck
 
 import (
 	"errors"
@@ -10,12 +11,13 @@ import (
 
 var isHealth bool = true
 
-func whatflixHealthCheck(errChan chan error) {
+// Check the health of HTTP server
+func Check(urlAddr string, errChan chan error) {
 	for {
 		if isHealth {
 			time.Sleep(time.Second * 2)
 			// Create a Health Check Request
-			req, err := http.NewRequest(http.MethodGet, "/movies/health-check", nil)
+			req, err := http.NewRequest(http.MethodGet, urlAddr, nil)
 			if err != nil {
 				log.Println("error while creating health check request :", err)
 				continue
@@ -26,10 +28,10 @@ func whatflixHealthCheck(errChan chan error) {
 			handler := http.HandlerFunc(healthCheckHandler)
 			handler.ServeHTTP(rr, req)
 			if rr.Code == http.StatusOK {
-				log.Println("Health Check : WhatFlix HTTP Server is up and running")
+				log.Println("Health Check : HTTP Server is up and running")
 			} else {
 				isHealth = false
-				log.Println("Health Check : WhatFlix HTTP server is NOT SERVING")
+				log.Println("Health Check : HTTP server is NOT SERVING")
 				errChan <- errors.New("Health Check Faild")
 			}
 			time.Sleep(time.Second * 58)

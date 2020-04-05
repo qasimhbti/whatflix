@@ -9,9 +9,12 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/whatflix/internal/utils"
 	"github.com/whatflix/internal/version"
+	"github.com/whatflix/pkg/httphealthcheck"
+	"github.com/whatflix/pkg/utils"
 )
+
+const healthCheckAddr = "/movies/health-check"
 
 func main() {
 	err := run()
@@ -53,7 +56,7 @@ func run() error {
 	}()
 
 	// WhatFlix HTTP Server Health Check
-	go whatflixHealthCheck(errChan)
+	go httphealthcheck.Check(healthCheckAddr, errChan)
 
 	defer func() {
 		log.Println("Gracefully Shutting Down WhatFlix HTTP server...")
