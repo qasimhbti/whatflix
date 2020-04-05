@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/whatflix/internal/version"
+	"github.com/whatflix/internal/whatflixapis/version"
 	"github.com/whatflix/pkg/httphealthcheck"
 	"github.com/whatflix/pkg/utils"
 )
