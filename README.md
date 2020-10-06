@@ -1,8 +1,6 @@
 # **WHATFLIX**
 
-Search and Movie Recommendation Engine.
-Build a horizontal scaling Go application using decentralised and distributed microservices archictecture.
-All the services are build using native golang except gorilla mux package for HTTP routing.
+Search and Movie Recommendation Engine.                    Build a horizontal scaling Go application using decentralised and distributed microservices archictecture.                 All the services are build using native golang except gorilla mux package for HTTP routing.
 
 Following are the details of the services:-
 
@@ -19,30 +17,37 @@ docker network ls
 
 ### Build and run images of services
 
-* LogService
+* #### LogService
+
 docker build -t whatflix/logservice -f Dockerfile-logservice .
 docker run --name logservice --ip=127.0.0.10 --net=whatflixnet -P --rm -it -v /Users/syedqrizvi/sendinblue/goworkspace/src/github.com/whatflix/logservice:/log whatflix/logservice  
 
-* CacheService
+* #### CacheService
+
 docker build -t whatflix/cacheservice -f Dockerfile-cacheservice .
 docker run --name cacheservice --ip=127.0.0.11 --net=whatflixnet -P --rm -it whatflix/cacheservice
 
-* LoadBalancer
-docker build -t whatflix/loadbalancer -f Dockerfile-loadbalancer .
-docker run --name loadbalancer --ip=127.0.0.12 --net=whatflixnet -P --rm -it -- whatflix/loadbalancer --logservice=<https://127.0.0.10:6000>
+* #### LoadBalancer
 
-* WebMain
+docker build -t whatflix/loadbalancer -f Dockerfile-loadbalancer .
+docker run --name loadbalancer --ip=127.0.0.12 --net=whatflixnet -P --rm -it -- whatflix/loadbalancer --logservice=<http://127.0.0.10:6000>
+
+* #### WebMain
+
 docker build -t whatflix/web -f Dockerfile-web .
-docker run --name web --ip=127.0.0.13 --net=whatflixnet -P --rm -it -- whatflix/web --loadbalancer=<https://127.0.0.12:2001> --cacheservice=<https://127.0.0.11:5000> --logservice=<https://127.0.0.10:6000>
+docker run --name web --ip=127.0.0.13 --net=whatflixnet -P --rm -it -- whatflix/web --loadbalancer=<http://127.0.0.12:2001> --cacheservice=<http://127.0.0.11:5000> --logservice=<http://127.0.0.10:6000>
 
 ## Build - Using native go build and run the application using postman
 
-* Ping: GET Request <https://localhost:2000/ping>
-* SignIn: POST Request with body username and password <https://localhost:2000/movies/signin>
+Build all the four services using `go build` command and run as follows:
 
-* Search Engine: GET Request <https://localhost:2000/movies/user/101/search?text=Tom Hanks>
+* Ping: GET Request <http://localhost:2000/ping>
+  
+* SignIn: POST Request with body username and password <http://localhost:2000/movies/signin>
 
-* Recommendation Engine: GET Request <https://localhost:2000/movies/users>
+* Search Engine: GET Request <http://localhost:2000/movies/user/101/search?text=Tom Hanks>
+
+* Recommendation Engine: GET Request <http://localhost:2000/movies/users>
 
 ## Data Sets
 
@@ -51,7 +56,7 @@ I have used the Kaggle TMDB data set for this problem. Complete movie data set c
 The user preferences data file can be downloaded from here
 [LINK](https://github.com/qasimhbti/whatflix/blob/master/user_preferences.json)
 
-## 1. Search Engine :-
+## 1. Search Engine
 
     Restful web service API which will accept a search string and userID and return unique movies in the order of preference for that user.
 
@@ -70,7 +75,7 @@ The user preferences data file can be downloaded from here
       * Next show the movies matching the search term in the alphabetic order of titles (even if it does not match the user’s preferences). If #1 is empty then only these set of movies will be there.
       [“Movie 1”,”Movie 2”,”Movie 3”]
 
-## 2. Recommendation Engine :-
+## 2. Recommendation Engine
 
     Restful web service API which will list out all the users and the top 3 recommended movies for each user based on their preferences.
 
