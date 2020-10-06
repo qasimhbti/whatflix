@@ -12,7 +12,7 @@ import (
 var isHealth bool = true
 
 // Check the health of HTTP server
-func Check(urlAddr string, errChan chan error) {
+func Check(urlAddr, port string, errChan chan error) {
 	for {
 		if isHealth {
 			time.Sleep(time.Second * 2)
@@ -28,7 +28,7 @@ func Check(urlAddr string, errChan chan error) {
 			handler := http.HandlerFunc(healthCheckHandler)
 			handler.ServeHTTP(rr, req)
 			if rr.Code == http.StatusOK {
-				log.Println("Health Check : HTTP Server is up and running")
+				log.Printf("Health Check : HTTP Server is up and running on port %s", port)
 			} else {
 				isHealth = false
 				log.Println("Health Check : HTTP server is NOT SERVING")
